@@ -183,7 +183,7 @@ public class Database {
 //            updateFunding(100111, "Chairs", "In need of funds to purchase new updated chairs", "Finance", 15000);
  //           insertTravel(100111, "client meet", "Meetin the client in Dubai", 100006,"Finance","2023-03-14","Plane","Plane ticket and accomodation",30000 );
 //            updateTravel(100111, "client greet and meet", "Meeting the client in Dubai", "IT","2023-04-01","Plane","Plane ticket and accommodation",35000 );
-           deleteRecord(100111, "travels");
+           //deleteRecord(100111, "travels");
             //Select statement
             getRecords("travels");
             while(rowSet.next()){
