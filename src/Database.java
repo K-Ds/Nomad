@@ -33,6 +33,33 @@ public class Database {
         rowSet.moveToCurrentRow();
     }
 
+    static void insertHeadOfDepartment(int _id, String name, String department, String email, String password) throws SQLException {
+        String sql = "SELECT * FROM headdfdepartment";
+        rowSet.setCommand(sql);
+        rowSet.execute();
+        rowSet.moveToInsertRow();
+        rowSet.updateInt(1, _id);
+        rowSet.updateString(2, name);
+        rowSet.updateString(3, department);
+        rowSet.updateString(4, email);
+        rowSet.updateString(5, password);
+        rowSet.insertRow();
+        rowSet.moveToCurrentRow();
+    }
+
+    static void changeRequestStatus(int _id, String requestType, String status) throws SQLException {
+        String sql = "SELECT * FROM " + requestType +" WHERE _id=?";
+        System.out.println(sql);
+        rowSet.setCommand(sql);
+        rowSet.setInt(1, _id);
+        rowSet.execute();
+
+        while(rowSet.next()){
+            rowSet.updateString("Status", status);
+            rowSet.updateRow();
+        }
+    }
+
     static String getCredentials(int _id) throws  SQLException{
         String sql = "SELECT _id, Password FROM staff WHERE _id = ?";
         rowSet.setCommand(sql);
@@ -186,11 +213,17 @@ public class Database {
            //deleteRecord(100111, "travels");
             //Select statement
             getRecords("travels");
-            while(rowSet.next()){
-                String title = (String) rowSet.getObject("Title");
-                Date dateCreated = (Date) rowSet.getObject("DateCreated");
-                System.out.println(title + " " + dateCreated);
-            }
+            rowSet.next();
+            int _id = 100001;
+            String status = "approved";
+            String requestType = "travels";
+
+            changeRequestStatus(_id, requestType, status);
+//            while(rowSet.next()){
+//                String title = (String) rowSet.getObject("Title");
+//                Date dateCreated = (Date) rowSet.getObject("DateCreated");
+//                System.out.println(title + " " + dateCreated);
+//            }
 
 
         }
