@@ -1,10 +1,12 @@
 import javax.sql.RowSet;
 import javax.sql.rowset.JdbcRowSet;
 import javax.sql.rowset.RowSetProvider;
+import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
+
 import java.sql.*;
 
 public class Database {
-    static final String DRIVER = "com.mysql.jdbc.Driver";
+    static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DATABASE_URL = "jdbc:mysql://localhost/nomad_db";
     static final String USER = "root";
     static final String PASSWORD = "David123";
@@ -21,7 +23,27 @@ public class Database {
         rowSet.setPassword(PASSWORD);
     }
 
-    static void insertStaff(int _id, String name, String position, String contractType, String department, String password) throws SQLException {
+    static String getCredentials(int _id) throws  SQLException{
+        String sql = "SELECT * FROM staff WHERE _id = ?";
+        rowSet.setCommand(sql);
+        rowSet.setInt(1, _id);
+        rowSet.execute();
+        if(rowSet.next()){
+            return (String)rowSet.getObject("Password");
+        }
+        else{
+            return "Err_InvalidId";
+        }
+        
+    }
+
+    static void getDepartments() throws SQLException{
+        String sql = "SELECT DISTINCT(Department) FROM headofdepartment";
+        rowSet.setCommand(sql);
+        rowSet.execute();
+    }
+
+    static void insertStaff(int _id, String name, String position, String department, String password) throws SQLException {
         String sql = "SELECT * FROM staff";
         rowSet.setCommand(sql);
         rowSet.execute();
@@ -29,9 +51,8 @@ public class Database {
         rowSet.updateInt(1, _id);
         rowSet.updateString(2, name);
         rowSet.updateString(3, position);
-        rowSet.updateString(4, contractType);
-        rowSet.updateString(5, department);
-        rowSet.updateString(7, password);
+        rowSet.updateString(4, department);
+        rowSet.updateString(5, password);
         rowSet.insertRow();
         rowSet.moveToCurrentRow();
     }
@@ -52,7 +73,6 @@ public class Database {
 
     static void changeRequestStatus(int _id, String requestType, String status) throws SQLException {
         String sql = "SELECT * FROM " + requestType +" WHERE _id=?";
-        System.out.println(sql);
         rowSet.setCommand(sql);
         rowSet.setInt(1, _id);
         rowSet.execute();
@@ -61,14 +81,6 @@ public class Database {
             rowSet.updateString("Status", status);
             rowSet.updateRow();
         }
-    }
-
-    static String getCredentials(int _id) throws  SQLException{
-        String sql = "SELECT _id, Password FROM staff WHERE _id = ?";
-        rowSet.setCommand(sql);
-        rowSet.setInt(1, _id);
-        rowSet.execute();
-        return (String) rowSet.getObject("Password");
     }
 
     static void insertFunding(int _id, String title, String description,int requestedBy, String department, int amount) throws SQLException{
@@ -193,50 +205,13 @@ public class Database {
         }
     }
 
-    static void getRecords(String tableName) throws SQLException{
-        String sql = "SELECT * FROM "+ tableName;
+    static void getRecords(String tableName, int userId) throws SQLException{
+        String sql = "SELECT * FROM "+ tableName + " WHERE requestedBy = " + userId;
         rowSet.setCommand(sql);
         rowSet.execute();
     }
 
     static RowSet getRowSet(){
         return rowSet;
-    }
-
-
-
-
-    public static void main(String[] args){
-        try {
-            //Connect to database
-            dbConnect();
-
-//            insertWorkShop(100111,"AMS training","Training staff how to use the sys",100004,"IT",10000,12,"Board room" );
-//            updateWorkShop(100111,"E-Finance training","Training staff how to use the system","Finance",1500,120,"Meeting1 room" );
- //           insertFunding(100111, "Chairs and desks", "In need of funds to purchase new chairs", 100005,"Finance", 10000);
-//            updateFunding(100111, "Chairs", "In need of funds to purchase new updated chairs", "Finance", 15000);
- //           insertTravel(100111, "client meet", "Meetin the client in Dubai", 100006,"Finance","2023-03-14","Plane","Plane ticket and accomodation",30000 );
-//            updateTravel(100111, "client greet and meet", "Meeting the client in Dubai", "IT","2023-04-01","Plane","Plane ticket and accommodation",35000 );
-           //deleteRecord(100111, "travels");
-            //Select statement
-            getRecords("travels");
-            rowSet.next();
-            int _id = 100001;
-            String status = "approved";
-            String requestType = "travels";
-
-            changeRequestStatus(_id, requestType, status);
-//            while(rowSet.next()){
-//                String title = (String) rowSet.getObject("Title");
-//                Date dateCreated = (Date) rowSet.getObject("DateCreated");
-//                System.out.println(title + " " + dateCreated);
-//            }
-
-
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
     }
 }

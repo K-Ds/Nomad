@@ -9,8 +9,7 @@ public class Main {
             ex.printStackTrace();
             System.exit(0);
         }
-        UserFrame userFrame = new UserFrame();
-        userFrame.setSize(1000, 500);
-        userFrame.setVisible(true);
+        AuthFrame authFrame =  new AuthFrame();
+        authFrame.setSize(600, 500);
     }
 }
