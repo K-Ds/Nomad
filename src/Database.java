@@ -1,16 +1,19 @@
+import javax.sql.RowSet;
 import javax.sql.rowset.JdbcRowSet;
 import javax.sql.rowset.RowSetProvider;
 import java.sql.*;
 
 public class Database {
     static final String DRIVER = "com.mysql.jdbc.Driver";
-    static final String DATABASE_URL = "jdbc:mysql://localhost/nomad";
+    static final String DATABASE_URL = "jdbc:mysql://localhost/nomad_db";
     static final String USER = "root";
     static final String PASSWORD = "David123";
     static JdbcRowSet rowSet = null;
 
 
-    static void dbConnect() throws SQLException {
+    static void dbConnect() throws Exception{
+    	Class.forName(DRIVER);
+    	
         rowSet = RowSetProvider.newFactory().createJdbcRowSet();
         //Connection
         rowSet.setUrl(DATABASE_URL);
@@ -194,6 +197,10 @@ public class Database {
         String sql = "SELECT * FROM "+ tableName;
         rowSet.setCommand(sql);
         rowSet.execute();
+    }
+
+    static RowSet getRowSet(){
+        return rowSet;
     }
 
 
