@@ -19,7 +19,8 @@ public class AuthFrame extends JFrame {
 		authTabbedPane.addTab("Register", registerPanel);
 
 		add(authTabbedPane);
-		
+
+		setSize(600, 500);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 	}
@@ -149,21 +150,41 @@ public class AuthFrame extends JFrame {
                 int id = Integer.parseInt(idField.getText());
                 String password = new String(passwordField.getPassword());
                 try{
-                    String passwordCheck =  Database.getCredentials(id);
+                    String passwordCheck;
+                    Boolean isManager = managerCheckBox.isSelected();
+                    if(isManager){
+                        passwordCheck =  Database.getAdminCredentials(id);
+                    }
+                    else{
+                        passwordCheck =  Database.getCredentials(id);
+                    }
+                    
                     if(passwordCheck == "Err_InvalidId"){
                         JOptionPane.showMessageDialog(this, "Incorrect credentials", "Authentication failed", JOptionPane.WARNING_MESSAGE);
                     }
+
                     else if(password.equals(passwordCheck)){
                         RowSet rs = Database.getRowSet();
                         rs.absolute(1);
-                        int _id  = (int) rs.getObject("_id");
                         String name = (String) rs.getObject("name");
-                        String position = (String) rs.getObject("position");
-                        String department = (String) rs.getObject("department");
+                        String position;
+                        if(isManager){
+                            position = "HOD";
+                        }
+                        else{
+                            position = (String) rs.getObject("position");
+                        }
+                        
+                        String department = (String) rs.getObject("department"); 
+                        User.createUser(id, name, position, department, isManager);
 
-                        User.createUser(_id, name, position, department);
-
-                        new UserFrame();
+                        if(isManager){
+                            new AdminFrame();
+                        }
+                        else{
+                            new UserFrame();
+                        }
+                        
                         parentFrame.dispose();
                     }
                     else {

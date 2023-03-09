@@ -1,7 +1,6 @@
 import javax.sql.RowSet;
 import javax.sql.rowset.JdbcRowSet;
 import javax.sql.rowset.RowSetProvider;
-import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 
 import java.sql.*;
 
@@ -25,6 +24,20 @@ public class Database {
 
     static String getCredentials(int _id) throws  SQLException{
         String sql = "SELECT * FROM staff WHERE _id = ?";
+        rowSet.setCommand(sql);
+        rowSet.setInt(1, _id);
+        rowSet.execute();
+        if(rowSet.next()){
+            return (String)rowSet.getObject("Password");
+        }
+        else{
+            return "Err_InvalidId";
+        }
+        
+    }
+
+    static String getAdminCredentials(int _id) throws  SQLException{
+        String sql = "SELECT * FROM headofdepartment WHERE _id = ?";
         rowSet.setCommand(sql);
         rowSet.setInt(1, _id);
         rowSet.execute();
@@ -69,18 +82,6 @@ public class Database {
         rowSet.updateString(5, password);
         rowSet.insertRow();
         rowSet.moveToCurrentRow();
-    }
-
-    static void changeRequestStatus(int _id, String requestType, String status) throws SQLException {
-        String sql = "SELECT * FROM " + requestType +" WHERE _id=?";
-        rowSet.setCommand(sql);
-        rowSet.setInt(1, _id);
-        rowSet.execute();
-
-        while(rowSet.next()){
-            rowSet.updateString("Status", status);
-            rowSet.updateRow();
-        }
     }
 
     static void insertFunding(int _id, String title, String description,int requestedBy, String department, int amount) throws SQLException{
@@ -207,6 +208,32 @@ public class Database {
 
     static void getRecords(String tableName, int userId) throws SQLException{
         String sql = "SELECT * FROM "+ tableName + " WHERE requestedBy = " + userId;
+        rowSet.setCommand(sql);
+        rowSet.execute();
+    }
+
+    static void getRecords(String tableName, String department) throws SQLException{
+        String sql = "SELECT * FROM "+ tableName + " WHERE Department = ?";
+
+        rowSet.setCommand(sql);
+        rowSet.setString(1, department);
+        rowSet.execute();
+    }
+
+    static void changeRequestStatus(int _id, String requestType, String status) throws SQLException {
+        String sql = "SELECT * FROM " + requestType +" WHERE _id=?";
+        rowSet.setCommand(sql);
+        rowSet.setInt(1, _id);
+        rowSet.execute();
+
+        while(rowSet.next()){
+            rowSet.updateString("Status", status);
+            rowSet.updateRow();
+        }
+    }
+    
+    static void getRecords(String tableName) throws SQLException{
+        String sql = "SELECT * FROM "+ tableName;
         rowSet.setCommand(sql);
         rowSet.execute();
     }

@@ -1,16 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class UserFrame extends JFrame {
+public class AdminFrame extends JFrame {
     JPanel travelsRequestPanel;
     JPanel workshopsRequestPanel;
     JPanel fundsRequestPanel;
     JPanel accountPanel;
 
-    public UserFrame() {
-        JTabbedPane userTabbedPane = new JTabbedPane();
+    public AdminFrame() {
+        JTabbedPane adminTabbedPane = new JTabbedPane();
 
-        userTabbedPane.setTabPlacement(JTabbedPane.LEFT);
+        adminTabbedPane.setTabPlacement(JTabbedPane.LEFT);
         travelsRequestPanel = new RequestPanel("Travels Requests", "travels", this);
         workshopsRequestPanel = new RequestPanel("Workshops Requests", "workshops", this);
         fundsRequestPanel = new RequestPanel("Funds Requests", "fundings", this);
@@ -24,10 +24,10 @@ public class UserFrame extends JFrame {
         accountPanel.setLayout(null);
         accountPanel.add(logoutButton);
 
-        userTabbedPane.addTab("Travels", travelsRequestPanel);
-        userTabbedPane.addTab("Workshops", workshopsRequestPanel);
-        userTabbedPane.addTab("Funds", fundsRequestPanel);
-        userTabbedPane.addTab("Account", accountPanel);
+        adminTabbedPane.addTab("Travels", travelsRequestPanel);
+        adminTabbedPane.addTab("Workshops", workshopsRequestPanel);
+        adminTabbedPane.addTab("Funds", fundsRequestPanel);
+        adminTabbedPane.addTab("Account",accountPanel);
 
         String[] columnNames = {"Travels", "Workshops", "Funds", "Account"};
 
@@ -35,10 +35,10 @@ public class UserFrame extends JFrame {
             JLabel label = new JLabel(columnNames[i]);
             label.setSize(new Dimension(100,125));
             label.setFont(new Font("Poppins", Font.PLAIN, 20));
-            userTabbedPane.setTabComponentAt(i, label);
+            adminTabbedPane.setTabComponentAt(i, label);
         }
 
-        add(userTabbedPane);
+        add(adminTabbedPane);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setVisible(true);

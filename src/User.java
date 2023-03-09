@@ -1,15 +1,17 @@
 public class User {
-    private static int Id;
+    private static int _id;
     private static String Name;
     private static String Position;
     private static String Department;
+    private static boolean isManager;
 
 
-    static void createUser(int id,String name, String position, String department){
-        Id = id;
+    static void createUser(int id,String name, String position, String department, boolean Manager){
+        _id = id;
         Name = name;
         Position = position;
         Department = department;
+        isManager = Manager;
     }
 
     static String getName(){
@@ -24,7 +26,11 @@ public class User {
         return Department;
     }
 
+    static boolean getIsManager(){
+        return isManager;
+    }
+
     static int getUserId(){
-        return Id;
+        return _id;
     }
 }
